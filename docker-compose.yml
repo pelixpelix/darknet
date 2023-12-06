@@ -1,0 +1,42 @@
+services:
+  privoxy:
+    build:
+      context: ./privoxy
+    restart: always
+    ports:
+      - 8118:8118
+    depends_on:
+      - i2p
+      - tor
+  tor:
+    build:
+      context: ./tor
+    container_name: tor
+    restart: always
+#    env_file: tor.env
+    ports:
+      - target: 9050
+        published: 9050
+        protocol: tcp
+        mode: host
+    tmpfs:
+      - /var/lib/tor:size=128M,uid=100,gid=65533,mode=1700
+    networks:
+      - default
+      - tor
+  i2p:
+    build:
+      context: ./i2p
+    restart: always
+    ports:
+      - 4444:4444
+      - 4447:4447
+    tmpfs:
+      - /root/.i2pd:size=128M,uid=100,gid=65534,mode=1700
+networks:
+  default:
+    internal: false
+  tor:
+    internal: true
+    name: tor
+    driver: bridge
