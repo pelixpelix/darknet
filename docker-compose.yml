@@ -11,9 +11,9 @@ services:
   tor:
     build:
       context: ./tor
-    container_name: tor
+    container_name: torx
     restart: always
-#    env_file: tor.env
+    env_file: tor.env
     ports:
       - target: 9050
         published: 9050
